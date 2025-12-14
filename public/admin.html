@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - GameLoot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #9C27B0;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: #9C27B0;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #F44336;
+            color: white;
+        }
+        
+        .settlements {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .settlement-card {
+            background: #0c0c0c;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #333;
+        }
+        
+        .settlement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #FF9800;
+        }
+        
+        .status-approved {
+            background: #4CAF50;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            background: #0c0c0c;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 20px;
+            min-height: 100px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Admin Panel</h1>
+            <p style="color: #999;">Settlement Management</p>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-primary" id="createSettlementBtn">
+                ➕ Create Settlement
+            </button>
+            <button class="btn btn-secondary" id="addRevenueBtn">
+                🧪 Add Test Revenue
+            </button>
+        </div>
+        
+        <div class="settlements">
+            <h2 style="margin-bottom: 20px;">Pending Settlements</h2>
+            <div id="settlementsContainer">
+                <div class="empty-state">
+                    <div class="loading"></div>
+                    <p>Loading settlements...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Execute Modal -->
+    <div class="modal" id="executeModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Execute Settlement</h3>
+            <p style="color: #999; margin-bottom: 16px;">Enter transaction signatures (comma-separated)</p>
+            <textarea class="modal-input" id="signaturesInput" placeholder="test_sig_1, test_sig_2"></textarea>
+            <div class="modal-actions">
+                <button class="btn btn-danger" style="flex: 1;" id="cancelExecuteBtn">Cancel</button>
+                <button class="btn btn-success" style="flex: 1;" id="confirmExecuteBtn">Execute</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Get token from localStorage (set by main app)
+        const token = localStorage.getItem('token') || localStorage.getItem('userToken');
+        const API_URL = window.location.origin;
+        
+        let currentSettlement = null;
+        
+        // API Helper
+        async function apiCall(endpoint, options = {}) {
+            const response = await fetch(`${API_URL}/api${endpoint}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    ...options.headers,
+                },
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'API Error');
+            }
+            
+            return response.json();
+        }
+        
+        // Load Settlements
+        async function loadSettlements() {
+            try {
+                const data = await apiCall('/admin/settlement-history');
+                const activeSettlements = data.settlements.filter(s => 
+                    s.status === 'pending_approval' || s.status === 'approved'
+                );
+                
+                renderSettlements(activeSettlements);
+            } catch (error) {
+                console.error('Error loading settlements:', error);
+                document.getElementById('settlementsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <p style="color: #F44336;">Error: ${error.message}</p>
+                        <p style="color: #666;">Make sure you're logged in as admin</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Render Settlements
+        function renderSettlements(settlements) {
+            const container = document.getElementById('settlementsContainer');
+            
+            if (settlements.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>✅ No pending settlements</p>
+                        <p style="color: #666;">Create a new settlement to get started</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = settlements.map(s => `
+                <div class="settlement-card">
+                    <div class="settlement-header">
+                        <div>
+                            <strong>${s._id.slice(0, 8)}...</strong>
+                            <p style="color: #666; font-size: 12px; margin-top: 4px;">
+                                ${new Date(s.created_at).toLocaleString()}
+                            </p>
+                        </div>
+                        <div class="status-badge status-${s.status === 'pending_approval' ? 'pending' : 'approved'}">
+                            ${s.status}
+                        </div>
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-label">Total Revenue</div>
+                            <div class="stat-value">$${s.total_revenue_usd.toFixed(2)}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">WIN to Buy</div>
+                            <div class="stat-value">${s.total_win_to_buy.toFixed(2)}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Users</div>
+                            <div class="stat-value">${s.users_count}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #000; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: #999;">70% for Users:</span>
+                            <span style="color: #4CAF50;">${s.win_for_users_70.toFixed(2)} WIN</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #999;">30% for Liquidity:</span>
+                            <span style="color: #4CAF50;">${s.win_for_liquidity_30.toFixed(2)} WIN</span>
+                        </div>
+                    </div>
+                    
+                    ${s.status === 'pending_approval' ? `
+                        <button class="btn btn-success" style="width: 100%;" onclick="approveSettlement('${s._id}')">
+                            ✓ Approve Settlement
+                        </button>
+                    ` : ''}
+                    
+                    ${s.status === 'approved' ? `
+                        <button class="btn btn-secondary" style="width: 100%;" onclick="showExecuteModal('${s._id}')">
+                            🚀 Execute Settlement
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+        
+        // Add Test Revenue
+        document.getElementById('addRevenueBtn').addEventListener('click', async () => {
+            const amount = prompt('Enter amount in USD per user:\n\n0.10 = $0.10\n1.00 = $1.00\n10.00 = $10.00', '1.00');
+            if (!amount) return;
+            
+            const btn = document.getElementById('addRevenueBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Adding...';
+            
+            try {
+                const result = await apiCall('/admin/add-test-revenue', {
+                    method: 'POST',
+                    body: JSON.stringify({ amount_usd: parseFloat(amount) }),
+                });
+                
+                alert(`✅ Success!\n\nAdded $${amount} to ${result.users_updated} users.`);
+                loadSettlements();
+            } catch (error) {
+                alert(`❌ Error: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🧪 Add Test Revenue';
+            }
+        });
+        
+        // Create Settlement
+        document.getElementById('createSettlementBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('createSettlementBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Creating...';
+            
+            try {
+                const result = await apiCall('/admin/create-settlement', {
+                    method: 'POST',
+                });
+                
+                if (result.proposal) {
+                    alert('✅ Settlement created successfully!');
+                    loadSettlements();
+                } else {
+                    alert(`ℹ️ ${result.message}`);
+                }
+            } catch (error) {
+                alert(`❌ Error: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '➕ Create Settlement';
+            }
+        });
+        
+        // Approve Settlement
+        async function approveSettlement(id) {
+            if (!confirm('Approve this settlement?')) return;
+            
+            try {
+                await apiCall(`/admin/approve-settlement/${id}`, {
+                    method: 'POST',
+                });
+                
+                alert('✅ Settlement approved! Now execute transactions on-chain.');
+                loadSettlements();
+            } catch (error) {
+                alert(`❌ Error: ${error.message}`);
+            }
+        }
+        
+        // Show Execute Modal
+        function showExecuteModal(id) {
+            currentSettlement = id;
+            document.getElementById('executeModal').classList.add('show');
+            document.getElementById('signaturesInput').value = '';
+        }
+        
+        // Execute Settlement
+        document.getElementById('confirmExecuteBtn').addEventListener('click', async () => {
+            const signatures = document.getElementById('signaturesInput').value.trim();
+            if (!signatures) {
+                alert('Please enter transaction signatures');
+                return;
+            }
+            
+            const btn = document.getElementById('confirmExecuteBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span>';
+            
+            try {
+                const sigs = signatures.split(',').map(s => s.trim()).filter(s => s);
+                await apiCall('/admin/execute-settlement', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        settlement_id: currentSettlement,
+                        transaction_signatures: sigs,
+                    }),
+                });
+                
+                alert('✅ Settlement executed successfully!');
+                document.getElementById('executeModal').classList.remove('show');
+                loadSettlements();
+            } catch (error) {
+                alert(`❌ Error: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Execute';
+            }
+        });
+        
+        // Cancel Execute
+        document.getElementById('cancelExecuteBtn').addEventListener('click', () => {
+            document.getElementById('executeModal').classList.remove('show');
+        });
+        
+        // Check auth
+        if (!token) {
+            alert('You are not logged in. Please login first.');
+            window.location.href = '/';
+        } else {
+            loadSettlements();
+        }
+        
+        // Refresh every 10 seconds
+        setInterval(loadSettlements, 10000);
+    </script>
+</body>
+</html>

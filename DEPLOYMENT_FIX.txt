@@ -1,0 +1,1 @@
+// Fix: Force navigation after registration

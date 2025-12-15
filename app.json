@@ -28,7 +28,8 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png",
       "meta": {
-        "google-adsense-account": "ca-pub-8345509178507577"
+        "google-adsense-account": "ca-pub-8345509178507577",
+        "monetag": "84a69637dddbaf50918ff9457037a31a"
       }
     },
     "plugins": [

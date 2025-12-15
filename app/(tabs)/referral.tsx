@@ -54,8 +54,8 @@ export default function Referral() {
   const copyToClipboard = async () => {
     if (data?.referral_code) {
       try {
-        // Create full referral link
-        const appUrl = 'https://gameearnings.preview.emergentagent.com'; // Replace with your actual app URL
+        // Create full referral link with PRODUCTION Netlify URL
+        const appUrl = 'https://astounding-choux-cb06ae.netlify.app';
         const referralLink = `${appUrl}/register?ref=${data.referral_code}`;
         
         // Check if we're in web environment
@@ -79,8 +79,8 @@ export default function Referral() {
     }
     
     try {
-      // Create full app link with referral code
-      const appUrl = 'https://gameearnings.preview.emergentagent.com';
+      // Create full app link with referral code - PRODUCTION Netlify URL
+      const appUrl = 'https://astounding-choux-cb06ae.netlify.app';
       const referralLink = `${appUrl}/register?ref=${data.referral_code}`;
       
       const shareMessage = `🎮 GAMELOOT - Fito Para Reale!

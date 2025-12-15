@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, Head } from 'expo-router';
 import { Platform } from 'react-native';
 import { AuthProvider } from '../contexts/AuthContext';
 import { AudioProvider } from '../contexts/AudioContext';
@@ -18,20 +18,25 @@ export default function RootLayout() {
   }, []);
   
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <AudioProvider>
-          <AdRevenueProvider>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="index" />
-              <Stack.Screen name="login" />
-              <Stack.Screen name="register" />
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="admin" />
-            </Stack>
-          </AdRevenueProvider>
-        </AudioProvider>
-      </AuthProvider>
-    </LanguageProvider>
+    <>
+      <Head>
+        <meta name="monetag" content="84a69637dddbaf50918ff9457037a31a" />
+      </Head>
+      <LanguageProvider>
+        <AuthProvider>
+          <AudioProvider>
+            <AdRevenueProvider>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen name="login" />
+                <Stack.Screen name="register" />
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="admin" />
+              </Stack>
+            </AdRevenueProvider>
+          </AudioProvider>
+        </AuthProvider>
+      </LanguageProvider>
+    </>
   );
 }

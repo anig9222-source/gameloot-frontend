@@ -103,7 +103,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Navigate directly to dashboard (same as login)
       if (router) {
         console.log('[AUTH] Navigating to dashboard after registration');
-        router.replace('/(tabs)/dashboard');
+        // Force navigation with a small delay to ensure state is updated
+        setTimeout(() => {
+          router.replace('/(tabs)/dashboard');
+        }, 100);
       }
     } catch (error) {
       console.error('[AUTH] Registration error:', error);

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import api from '../utils/api';
 
 interface User {
   email: string;
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log('[AUTH] Login attempt for:', email);
     
     try {
-      const response = await axios.post('/api/auth/login', {
+      const response = await api.post('/auth/login', {
         email,
         password
       });
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log('[AUTH] Registration attempt for:', email);
     
     try {
-      const response = await axios.post('/api/auth/register', {
+      const response = await api.post('/auth/register', {
         email,
         password,
         referral_code: referralCode || ''

@@ -9,23 +9,11 @@ import { AdRevenueProvider } from '../contexts/AdRevenueContext';
 import { initializeAdSense } from '../services/adsenseService';
 
 export default function RootLayout() {
-  // Initialize AdSense Auto Ads (Web only)
+  // Initialize Ads (Web only)
   useEffect(() => {
     if (Platform.OS === 'web') {
-      initializeAdSense();
-      console.log('🔥 AGGRESSIVE MONETIZATION MODE ACTIVATED');
-      console.log('💰 Google AdSense Auto Ads initialized for maximum revenue');
-      
-      // Initialize MonetizeTag OnClick Ad (Zone: 10330829)
-      try {
-        const script = document.createElement('script');
-        script.dataset.zone = '10330829';
-        script.src = 'https://al5sm.com/tag.min.js';
-        (document.documentElement || document.body).appendChild(script);
-        console.log('💰 MonetizeTag OnClick Ad initialized');
-      } catch (error) {
-        console.error('MonetizeTag OnClick initialization failed:', error);
-      }
+      console.log('🔥 MONETIZATION MODE ACTIVATED');
+      console.log('💰 MonetizeTag Multitag initialized - Banner Ads + Push Notifications');
     }
   }, []);
   
@@ -33,8 +21,8 @@ export default function RootLayout() {
     <>
       <Head>
         <meta name="monetag" content="84a69637dddbaf50918ff9457037a31a" />
-        {/* MonetizeTag Push Notifications (Pleasant tag - Zone: 10330455) */}
-        <script src="https://3nbf4.com/act/files/tag.min.js?z=10330455" data-cfasync="false" async />
+        {/* MonetizeTag Multitag - Banner Ads + Push Notifications + More (Zone: 193429) */}
+        <script src="https://quge5.com/88/tag.min.js" data-zone="193429" async data-cfasync="false" />
       </Head>
       <LanguageProvider>
         <AuthProvider>

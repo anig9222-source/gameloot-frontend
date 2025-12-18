@@ -107,7 +107,7 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
       console.log('🔄 [WIN] Refreshing from backend...');
       
       // Import API instance
-      const { default: api } = await import('../services/api');
+      const { default: api } = await import('../utils/api');
       
       // Fetch dashboard data from backend
       const response = await api.get('/user/dashboard');

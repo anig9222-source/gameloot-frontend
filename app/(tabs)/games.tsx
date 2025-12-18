@@ -91,7 +91,7 @@ export default function Games() {
   const { playWin, playLoss, playJackpot } = useAudio();
   const { t } = useLanguage();
   const router = useRouter();
-  const { addWinTokens, todayWinTokens, totalWinTokens, adsWatched, todayUSD, totalUSD, refreshFromBackend } = useAdRevenue();
+  const { addWinTokens, todayWinTokens, totalWinTokens, adsWatched, todayUSD, totalUSD, isLoading: rewardsLoading, refreshFromBackend } = useAdRevenue();
   
   // State declarations - MUST come before useEffect that uses them
   const [loading, setLoading] = useState(false);
@@ -382,7 +382,7 @@ export default function Games() {
             <Ionicons name="wallet" size={24} color="#FFD700" />
             <Text style={styles.revenueTitle}>🪙 WIN Token Balance</Text>
           </View>
-          {loading ? (
+          {rewardsLoading ? (
             <View style={styles.revenueLoadingContainer}>
               <ActivityIndicator size="large" color="#4CAF50" />
               <Text style={styles.revenueLoadingText}>Po ngarkon shpërblimet...</Text>

@@ -18,6 +18,7 @@ interface AdRevenueContextType {
   adsWatched: number;
   totalUSD: number;
   todayUSD: number;
+  isLoading: boolean;
   addWinTokens: (tokens: number, type: 'banner' | 'native' | 'modal') => void;
   resetDaily: () => void;
   refreshFromBackend: () => Promise<void>;
@@ -32,12 +33,15 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [lastResetDate, setLastResetDate] = useState<string>('');
   const [totalUSD, setTotalUSD] = useState(0);
   const [todayUSD, setTodayUSD] = useState(0);
+  const [isLoading, setIsLoading] = useState(true); // NEW: Track loading state
 
   useEffect(() => {
     const init = async () => {
+      setIsLoading(true);
       await loadRevenue();
       await checkDailyReset();
       await refreshFromBackend(); // Fetch real data from backend
+      setIsLoading(false);
     };
     init();
   }, []);
@@ -162,6 +166,7 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
         adsWatched,
         totalUSD,
         todayUSD,
+        isLoading,
         addWinTokens,
         resetDaily,
         refreshFromBackend,

@@ -103,9 +103,10 @@ export default function Support() {
             {expandedFaq === 'faq_tokens' && (
               <View style={styles.faqAnswerBox}>
                 <Text style={styles.faqAnswerText}>
-                  Çdo herë që luani një lojë, gjeneroni revenue nga ads. 70% e kësaj revenue
-                  konvertohet në PW tokens çdo natë në ora 00:00. Tokens mund të përdoren për
-                  withdrawal ose për të luajtur më shumë.
+                  Përdoruesit fitojnë 60% të vlerës së gjeneruar nga reklama në WIN Points. 
+                  Aplikacioni mban 40% të vlerës së gjeneruar nga reklama.{'\n\n'}
+                  WIN Points janë pikë shpërblimi virtuale brenda aplikacionit dhe nuk kanë vlerë monetare brenda app-it.{'\n\n'}
+                  Konvertimi është i disponueshëm vetëm pas 15 ditësh përdorimi aktiv dhe pas verifikimit (të rritur/prind ose kujdestar ligjor) dhe ndodh jashtë aplikacionit.
                 </Text>
               </View>
             )}

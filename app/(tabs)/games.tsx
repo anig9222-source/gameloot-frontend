@@ -382,25 +382,40 @@ export default function Games() {
             <Ionicons name="wallet" size={24} color="#FFD700" />
             <Text style={styles.revenueTitle}>🪙 WIN Token Balance</Text>
           </View>
-          <View style={styles.revenueStats}>
-            <View style={styles.revenueStat}>
-              <Text style={styles.revenueLabel}>Sot</Text>
-              <Text style={styles.revenueAmount}>{todayWinTokens.toFixed(2)} WIN</Text>
-              <Text style={styles.revenueUsd}>${(todayWinTokens / 60).toFixed(4)} (60%)</Text>
+          {loading ? (
+            <View style={styles.revenueLoadingContainer}>
+              <ActivityIndicator size="large" color="#4CAF50" />
+              <Text style={styles.revenueLoadingText}>Po ngarkon shpërblimet...</Text>
             </View>
-            <View style={styles.revenueDivider} />
-            <View style={styles.revenueStat}>
-              <Text style={styles.revenueLabel}>Totali</Text>
-              <Text style={styles.revenueAmountTotal}>{totalWinTokens.toFixed(2)} WIN</Text>
-              <Text style={styles.revenueUsd}>${(totalWinTokens / 60).toFixed(4)} (60%)</Text>
+          ) : (
+            <View style={styles.revenueStats}>
+              <View style={styles.revenueStat}>
+                <Text style={styles.revenueLabel}>Sot</Text>
+                <Text style={styles.revenueAmount}>
+                  {todayWinTokens > 0 ? todayWinTokens.toFixed(2) : '0.00'} WIN
+                </Text>
+                <Text style={styles.revenueUsd}>
+                  ${todayWinTokens > 0 ? (todayWinTokens / 60).toFixed(4) : '0.0000'} (60%)
+                </Text>
+              </View>
+              <View style={styles.revenueDivider} />
+              <View style={styles.revenueStat}>
+                <Text style={styles.revenueLabel}>Totali</Text>
+                <Text style={styles.revenueAmountTotal}>
+                  {totalWinTokens > 0 ? totalWinTokens.toFixed(2) : '0.00'} WIN
+                </Text>
+                <Text style={styles.revenueUsd}>
+                  ${totalWinTokens > 0 ? (totalWinTokens / 60).toFixed(4) : '0.0000'} (60%)
+                </Text>
+              </View>
+              <View style={styles.revenueDivider} />
+              <View style={styles.revenueStat}>
+                <Text style={styles.revenueLabel}>Ads</Text>
+                <Text style={styles.revenueCount}>{adsWatched || 0}</Text>
+                <Text style={styles.revenueUsd}>shikuar</Text>
+              </View>
             </View>
-            <View style={styles.revenueDivider} />
-            <View style={styles.revenueStat}>
-              <Text style={styles.revenueLabel}>Ads</Text>
-              <Text style={styles.revenueCount}>{adsWatched}</Text>
-              <Text style={styles.revenueUsd}>shikuar</Text>
-            </View>
-          </View>
+          )}
           <View style={styles.infoBox}>
             <Ionicons name="lock-closed" size={16} color="#FF9800" />
             <Text style={styles.lockText}>🔒 Locked deri KYC (15 ditë | $0.40/ditë | 10 referral)</Text>
@@ -1173,6 +1188,16 @@ const styles = StyleSheet.create({
     width: 1,
     height: 40,
     backgroundColor: '#333',
+  },
+  revenueLoadingContainer: {
+    paddingVertical: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  revenueLoadingText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: '#999',
   },
   balanceInfo: {
     alignItems: 'center',

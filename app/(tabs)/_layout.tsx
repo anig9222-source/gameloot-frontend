@@ -8,6 +8,14 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: '#1a1a1a',
           borderTopColor: '#333',
+          borderTopWidth: 1,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 60,
+          paddingBottom: 8,
+          paddingTop: 8,
         },
         tabBarActiveTintColor: '#4CAF50',
         tabBarInactiveTintColor: '#666',
@@ -15,6 +23,7 @@ export default function TabLayout() {
           backgroundColor: '#0c0c0c',
         },
         headerTintColor: '#fff',
+        headerShown: false,
       }}
     >
       <Tabs.Screen

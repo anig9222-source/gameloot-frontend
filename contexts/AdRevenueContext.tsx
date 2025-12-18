@@ -33,7 +33,8 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [lastResetDate, setLastResetDate] = useState<string>('');
   const [totalUSD, setTotalUSD] = useState(0);
   const [todayUSD, setTodayUSD] = useState(0);
-  const [isLoading, setIsLoading] = useState(true); // NEW: Track loading state
+  const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [isRefreshing, setIsRefreshing] = useState(false); // Track if currently refreshing from backend
 
   useEffect(() => {
     const init = async () => {
@@ -107,7 +108,13 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const refreshFromBackend = async () => {
+    if (isRefreshing) {
+      console.log('⏭️ [WIN] Already refreshing, skipping...');
+      return;
+    }
+    
     try {
+      setIsRefreshing(true);
       console.log('🔄 [WIN] Refreshing from backend...');
       
       // Import API instance
@@ -122,7 +129,7 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
       if (data) {
         // Update USD values from backend
         const totalUSDValue = data.pending_revenue_usd || 0;
-        const todayUSDValue = data.today_earnings_usd || 0; // FIXED: backend returns today_earnings_usd
+        const todayUSDValue = data.today_earnings_usd || 0;
         
         console.log('💰 [WIN] Setting USD values:', {
           totalUSDValue,
@@ -133,21 +140,27 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
         setTodayUSD(todayUSDValue);
         
         // Calculate WIN tokens (60 WIN per $1 USD)
-        const totalTokens = totalUSDValue * 60;
-        const todayTokens = todayUSDValue * 60;
+        // Use Math.round to avoid floating point issues
+        const totalTokens = Math.round(totalUSDValue * 60 * 100) / 100;
+        const todayTokens = Math.round(todayUSDValue * 60 * 100) / 100;
         
         console.log('🪙 [WIN] Setting WIN tokens:', {
           totalTokens,
           todayTokens,
         });
         
-        setTotalWinTokens(totalTokens);
-        setTodayWinTokens(todayTokens);
+        // Only update if different to prevent flickering
+        setTotalWinTokens(prev => totalTokens !== prev ? totalTokens : prev);
+        setTodayWinTokens(prev => todayTokens !== prev ? todayTokens : prev);
         
         // Update ads watched count if available
         if (data.ads_watched_today !== undefined) {
           setAdsWatched(data.ads_watched_today);
         }
+        
+        // Save to storage
+        await storage.setItem('win_tokens_total', totalTokens.toString());
+        await storage.setItem('win_tokens_today', todayTokens.toString());
         
         console.log('✅ [WIN] Refreshed from backend successfully!');
       } else {
@@ -155,6 +168,8 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
       }
     } catch (error) {
       console.error('❌ [WIN] Error refreshing from backend:', error);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 

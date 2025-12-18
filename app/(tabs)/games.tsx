@@ -748,6 +748,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 24,
+    paddingBottom: 100, // Extra space for bottom navigation bar
   },
   title: {
     fontSize: 32,

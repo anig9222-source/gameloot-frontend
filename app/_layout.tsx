@@ -9,20 +9,17 @@ import { AdRevenueProvider } from '../contexts/AdRevenueContext';
 import { initializeAdSense } from '../services/adsenseService';
 
 export default function RootLayout() {
-  // Initialize Ads (Web only)
+  // Ads temporarily removed for white screen fix
   useEffect(() => {
     if (Platform.OS === 'web') {
-      console.log('🔥 MONETIZATION MODE ACTIVATED');
-      console.log('💰 MonetizeTag Multitag initialized - Banner Ads + Push Notifications');
+      console.log('🔥 App initialized - Ads temporarily disabled');
     }
   }, []);
   
   return (
     <>
       <Head>
-        <meta name="monetag" content="84a69637dddbaf50918ff9457037a31a" />
-        {/* MonetizeTag Multitag - Banner Ads + Push Notifications + More (Zone: 193429) */}
-        <script src="https://quge5.com/88/tag.min.js" data-zone="193429" async data-cfasync="false" />
+        {/* Monetag scripts temporarily removed - will be replaced with rewarded video ads */}
       </Head>
       <LanguageProvider>
         <AuthProvider>

@@ -9,17 +9,24 @@ import { AdRevenueProvider } from '../contexts/AdRevenueContext';
 import { initializeAdSense } from '../services/adsenseService';
 
 export default function RootLayout() {
-  // Ads temporarily removed for white screen fix
+  // Initialize app
   useEffect(() => {
     if (Platform.OS === 'web') {
-      console.log('🔥 App initialized - Ads temporarily disabled');
+      console.log('🔥 GameLoot App initialized');
+      
+      // Load global CSS for web
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/global.css';
+      document.head.appendChild(link);
     }
   }, []);
   
   return (
     <>
       <Head>
-        {/* Monetag scripts temporarily removed - will be replaced with rewarded video ads */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta name="theme-color" content="#0c0c0c" />
       </Head>
       <LanguageProvider>
         <AuthProvider>

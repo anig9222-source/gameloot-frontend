@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { Audio } from 'expo-av';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import storage from './../utils/storage';
 
 interface AudioContextType {
   isMusicEnabled: boolean;
@@ -49,7 +49,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
   const loadMusicPreference = async () => {
     try {
-      const preference = await AsyncStorage.getItem('musicEnabled');
+      const preference = await storage.getItem('musicEnabled');
       if (preference !== null) {
         setIsMusicEnabled(preference === 'true');
       }
@@ -62,7 +62,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     const newValue = !isMusicEnabled;
     setIsMusicEnabled(newValue);
     try {
-      await AsyncStorage.setItem('musicEnabled', newValue.toString());
+      await storage.setItem('musicEnabled', newValue.toString());
     } catch (error) {
       console.error('Error saving music preference:', error);
     }

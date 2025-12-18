@@ -9,7 +9,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import storage from './../utils/storage';
 import api from '../services/api';
 
 interface UserState {
@@ -62,12 +62,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const loadPersistedData = async () => {
     try {
       const [coins, winTokens, revenue, adCount, screenCount, lastAdDate] = await Promise.all([
-        AsyncStorage.getItem(STORAGE_KEYS.COINS),
-        AsyncStorage.getItem(STORAGE_KEYS.WIN_TOKENS),
-        AsyncStorage.getItem(STORAGE_KEYS.PENDING_REVENUE),
-        AsyncStorage.getItem(STORAGE_KEYS.AD_VIEW_COUNT),
-        AsyncStorage.getItem(STORAGE_KEYS.SCREEN_VIEW_COUNT),
-        AsyncStorage.getItem(STORAGE_KEYS.LAST_AD_DATE),
+        storage.getItem(STORAGE_KEYS.COINS),
+        storage.getItem(STORAGE_KEYS.WIN_TOKENS),
+        storage.getItem(STORAGE_KEYS.PENDING_REVENUE),
+        storage.getItem(STORAGE_KEYS.AD_VIEW_COUNT),
+        storage.getItem(STORAGE_KEYS.SCREEN_VIEW_COUNT),
+        storage.getItem(STORAGE_KEYS.LAST_AD_DATE),
       ]);
 
       setState(prev => ({
@@ -89,18 +89,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const updateCoins = async (amount: number) => {
     const newCoins = state.coins + amount;
     setState(prev => ({ ...prev, coins: newCoins }));
-    await AsyncStorage.setItem(STORAGE_KEYS.COINS, newCoins.toString());
+    await storage.setItem(STORAGE_KEYS.COINS, newCoins.toString());
   };
 
   const updateWinTokens = async (amount: number) => {
     const newTokens = state.winTokens + amount;
     setState(prev => ({ ...prev, winTokens: newTokens }));
-    await AsyncStorage.setItem(STORAGE_KEYS.WIN_TOKENS, newTokens.toString());
+    await storage.setItem(STORAGE_KEYS.WIN_TOKENS, newTokens.toString());
   };
 
   const updateRevenue = async (amount: number) => {
     setState(prev => ({ ...prev, pendingRevenue: amount }));
-    await AsyncStorage.setItem(STORAGE_KEYS.PENDING_REVENUE, amount.toString());
+    await storage.setItem(STORAGE_KEYS.PENDING_REVENUE, amount.toString());
   };
 
   const incrementAdView = async () => {
@@ -114,20 +114,20 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }));
     
     await Promise.all([
-      AsyncStorage.setItem(STORAGE_KEYS.AD_VIEW_COUNT, newCount.toString()),
-      AsyncStorage.setItem(STORAGE_KEYS.LAST_AD_DATE, today),
+      storage.setItem(STORAGE_KEYS.AD_VIEW_COUNT, newCount.toString()),
+      storage.setItem(STORAGE_KEYS.LAST_AD_DATE, today),
     ]);
   };
 
   const incrementScreenView = async () => {
     const newCount = state.screenViewCount + 1;
     setState(prev => ({ ...prev, screenViewCount: newCount }));
-    await AsyncStorage.setItem(STORAGE_KEYS.SCREEN_VIEW_COUNT, newCount.toString());
+    await storage.setItem(STORAGE_KEYS.SCREEN_VIEW_COUNT, newCount.toString());
   };
 
   const resetAdCount = async () => {
     setState(prev => ({ ...prev, adViewCount: 0 }));
-    await AsyncStorage.setItem(STORAGE_KEYS.AD_VIEW_COUNT, '0');
+    await storage.setItem(STORAGE_KEYS.AD_VIEW_COUNT, '0');
   };
 
   const refreshUserData = async () => {
@@ -152,9 +152,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
       
       // Persist to storage
       await Promise.all([
-        AsyncStorage.setItem(STORAGE_KEYS.COINS, newState.coins.toString()),
-        AsyncStorage.setItem(STORAGE_KEYS.WIN_TOKENS, newState.winTokens.toString()),
-        AsyncStorage.setItem(STORAGE_KEYS.PENDING_REVENUE, newState.pendingRevenue.toString()),
+        storage.setItem(STORAGE_KEYS.COINS, newState.coins.toString()),
+        storage.setItem(STORAGE_KEYS.WIN_TOKENS, newState.winTokens.toString()),
+        storage.setItem(STORAGE_KEYS.PENDING_REVENUE, newState.pendingRevenue.toString()),
       ]);
     } catch (error) {
       console.error('[UserContext] Error refreshing data:', error);

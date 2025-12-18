@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import storage from '../../utils/storage';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -34,7 +34,7 @@ export default function AdminLogin() {
       });
 
       const { access_token } = response.data;
-      await AsyncStorage.setItem('admin_token', access_token);
+      await storage.setItem('admin_token', access_token);
       
       router.push('/admin/dashboard');
     } catch (error: any) {

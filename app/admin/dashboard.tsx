@@ -13,7 +13,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import storage from '../../utils/storage';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -33,7 +33,7 @@ export default function AdminDashboard() {
 
   const fetchAdminData = async () => {
     try {
-      const token = await AsyncStorage.getItem('admin_token');
+      const token = await storage.getItem('admin_token');
       if (!token) {
         router.replace('/admin');
         return;
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
 
   const handleSaveConfig = async () => {
     try {
-      const token = await AsyncStorage.getItem('admin_token');
+      const token = await storage.getItem('admin_token');
       await axios.put(
         `${API_URL}/api/admin/config`,
         editedConfig,
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
 
   const handleApprovePayout = async (payoutId: string, status: string) => {
     try {
-      const token = await AsyncStorage.getItem('admin_token');
+      const token = await storage.getItem('admin_token');
       await axios.put(
         `${API_URL}/api/admin/payout/approve`,
         { payout_id: payoutId, status },
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
 
   const triggerSettlement = async () => {
     try {
-      const token = await AsyncStorage.getItem('admin_token');
+      const token = await storage.getItem('admin_token');
       await axios.post(
         `${API_URL}/api/admin/trigger-settlement`,
         {},

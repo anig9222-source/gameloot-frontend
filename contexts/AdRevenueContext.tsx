@@ -10,7 +10,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import storage from './../utils/storage';
 
 interface AdRevenueContextType {
   totalWinTokens: number;
@@ -44,10 +44,10 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const loadRevenue = async () => {
     try {
-      const total = await AsyncStorage.getItem('win_tokens_total');
-      const today = await AsyncStorage.getItem('win_tokens_today');
-      const watched = await AsyncStorage.getItem('ads_watched');
-      const resetDate = await AsyncStorage.getItem('last_reset_date');
+      const total = await storage.getItem('win_tokens_total');
+      const today = await storage.getItem('win_tokens_today');
+      const watched = await storage.getItem('ads_watched');
+      const resetDate = await storage.getItem('last_reset_date');
 
       if (total) setTotalWinTokens(parseFloat(total));
       if (today) setTodayWinTokens(parseFloat(today));
@@ -60,7 +60,7 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const checkDailyReset = async () => {
     const today = new Date().toDateString();
-    const lastReset = await AsyncStorage.getItem('last_reset_date');
+    const lastReset = await storage.getItem('last_reset_date');
 
     if (lastReset !== today) {
       resetDaily();
@@ -77,9 +77,9 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
       setTodayWinTokens(newToday);
       setAdsWatched(newWatched);
 
-      await AsyncStorage.setItem('win_tokens_total', newTotal.toString());
-      await AsyncStorage.setItem('win_tokens_today', newToday.toString());
-      await AsyncStorage.setItem('ads_watched', newWatched.toString());
+      await storage.setItem('win_tokens_total', newTotal.toString());
+      await storage.setItem('win_tokens_today', newToday.toString());
+      await storage.setItem('ads_watched', newWatched.toString());
 
       console.log(`💰 [WIN] +${tokens} WIN (${type}) | Total: ${newTotal} WIN`);
     } catch (error) {
@@ -93,8 +93,8 @@ export const AdRevenueProvider: React.FC<{ children: ReactNode }> = ({ children 
       setTodayWinTokens(0);
       setLastResetDate(today);
 
-      await AsyncStorage.setItem('win_tokens_today', '0');
-      await AsyncStorage.setItem('last_reset_date', today);
+      await storage.setItem('win_tokens_today', '0');
+      await storage.setItem('last_reset_date', today);
 
       console.log('🔄 [WIN] Daily stats reset');
     } catch (error) {

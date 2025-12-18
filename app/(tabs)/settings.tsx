@@ -9,7 +9,7 @@ import {
   Alert
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import storage from '../../utils/storage';
 
 export default function Settings() {
   const [notifications, setNotifications] = useState(true);
@@ -27,7 +27,7 @@ export default function Settings() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await AsyncStorage.clear();
+              await storage.clear();
               Alert.alert('Sukses', 'Cache u pastrua!');
             } catch (error) {
               Alert.alert('Gabim', 'Nuk mund të pastrohej cache');

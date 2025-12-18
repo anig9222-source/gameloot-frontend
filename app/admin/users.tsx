@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import storage from '../../utils/storage';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -40,7 +40,7 @@ export default function AdminUsers() {
 
   const fetchUsers = async () => {
     try {
-      const token = await AsyncStorage.getItem('admin_token');
+      const token = await storage.getItem('admin_token');
       if (!token) return;
 
       const [usersRes, statsRes] = await Promise.all([

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import storage from '../utils/storage';
 import api from '../utils/api';
 
 interface User {
@@ -30,8 +30,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const loadStoredAuth = async () => {
     try {
-      const storedToken = await AsyncStorage.getItem('token');
-      const storedUser = await AsyncStorage.getItem('user');
+      const storedToken = await storage.getItem('token');
+      const storedUser = await storage.getItem('user');
       
       if (storedToken && storedUser) {
         setToken(storedToken);
@@ -56,9 +56,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { access_token, user: userData } = response.data;
       console.log('[AUTH] Login successful, got token');
       
-      // Persist to AsyncStorage FIRST (wait for it)
-      await AsyncStorage.setItem('token', access_token);
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      // Persist to storage FIRST (wait for it)
+      await storage.setItem('token', access_token);
+      await storage.setItem('user', JSON.stringify(userData));
       console.log('[AUTH] Token saved to AsyncStorage');
       
       // Then update state
@@ -90,9 +90,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { access_token, user: userData } = response.data;
       console.log('[AUTH] Registration successful, got token');
       
-      // Persist to AsyncStorage FIRST (wait for it)
-      await AsyncStorage.setItem('token', access_token);
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      // Persist to storage FIRST (wait for it)
+      await storage.setItem('token', access_token);
+      await storage.setItem('user', JSON.stringify(userData));
       console.log('[AUTH] Token saved to AsyncStorage');
       
       // Then update state
@@ -119,8 +119,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     try {
       // Clear AsyncStorage FIRST (wait for it)
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('user');
+      await storage.removeItem('token');
+      await storage.removeItem('user');
       console.log('[AUTH] AsyncStorage cleared');
       
       // Then update state
